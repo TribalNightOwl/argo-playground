@@ -1,0 +1,12 @@
+
+---
+- hosts: localhost
+  tasks:
+  - include_vars:
+      file: vars.yaml
+
+  - name: Create cluster
+    shell: |
+      k3d cluster create {{ cluster.name }}
+    args:
+      executable: /bin/bash

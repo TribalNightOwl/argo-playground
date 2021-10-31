@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  tasks:
+  - include_vars:
+      file: vars.yaml
+
+  - name: Create Argo namespace
+    kubernetes.core.k8s:
+      api_version: v1
+      kind: Namespace
+      name: "{{ argo.namespace }}"
+      state: present
+
+  - name: Download Argo Workflows manifest to the cluster.
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/argoproj/argo-workflows/master/manifests/quick-start-postgres.yaml
+      dest: ./quick-start-postgres.yaml
+      mode: '0664'
+
+  - name: Apply Argo Workflows manifest to the cluster.
+    kubernetes.core.k8s:
+      namespace: "{{ argo.namespace }}"
+      state: present
+      src: ./quick-start-postgres.yaml
+      wait: yes
+      wait_timeout: 360
+
+
+  # - name: Wait for all pods to be ready
+  #   shell: |
+  #     kubectl wait --for=condition=Ready pods --all --all-namespaces
+
+  - name: Print port forwarding command
+    ansible.builtin.debug:
+      msg:
+      - kubectl -n {{ argo.namespace }} port-forward deployment/argo-server 2746:2746 &

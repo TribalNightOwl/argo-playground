@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Install collections
+    shell: |
+      ansible-galaxy collection install -r requirements.yaml 
+
+  - name: Install kubernetes python package
+    pip:
+      name: kubernetes
+      state: present
+
+  - name: Install argo CLI
+    community.general.homebrew:
+      name: argo
+      state: present
+

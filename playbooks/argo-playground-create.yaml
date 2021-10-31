@@ -1,0 +1,9 @@
+---
+- import_playbook: init.yaml
+- import_playbook: cluster-create.yaml
+- import_playbook: argo-workflows-install.yaml
+
+
+# kubectl -n argo wait --for=condition=ready pod -l app=argo-server --timeout=6m
+
+# kubectl wait --for=condition=Ready pods --all --all-namespaces

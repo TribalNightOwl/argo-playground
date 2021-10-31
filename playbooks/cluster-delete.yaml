@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  tasks:
+  - include_vars:
+      file: vars.yaml
+
+  - name: Delete cluster
+    shell: |
+      k3d cluster delete {{ cluster.name }}
+    args:
+      executable: /bin/bash
